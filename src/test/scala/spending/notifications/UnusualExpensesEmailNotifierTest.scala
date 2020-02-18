@@ -1,8 +1,9 @@
-package spending
+package spending.notifications
 
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import spending.{Category, UnusualExpense}
 
 class UnusualExpensesEmailNotifierTest extends AnyWordSpec with Matchers with MockFactory {
 

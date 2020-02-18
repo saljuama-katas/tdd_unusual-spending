@@ -1,5 +1,6 @@
-package spending
+package spending.notifications
 
+import spending.{EmailsUser, UnusualExpense, UnusualExpensesNotifier}
 
 class UnusualExpensesEmailNotifier(val emailsUserWrapper: EmailsUserWrapper) extends UnusualExpensesNotifier {
 
