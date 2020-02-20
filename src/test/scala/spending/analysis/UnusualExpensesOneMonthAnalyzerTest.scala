@@ -5,7 +5,7 @@ import java.time.{Clock, Instant, ZoneId}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import spending.{Category, FetchesUserPaymentsByMonth, Payment, UnusualExpense}
+import spending.{Category, FetchesUserPaymentsByMonth, Payment, UnusualExpense, UnusualExpensesAnalyzer}
 
 
 class UnusualExpensesOneMonthAnalyzerTest extends AnyWordSpec with Matchers with MockFactory {
@@ -13,7 +13,7 @@ class UnusualExpensesOneMonthAnalyzerTest extends AnyWordSpec with Matchers with
   class SetupWithFixedCurrentDate(val date: String) {
     private def fakeClock: Clock = Clock.fixed(Instant.parse(date + "T00:00:00.00Z"), ZoneId.systemDefault())
     val fetchesUserPaymentsByMonth: FetchesUserPaymentsByMonth = mock[FetchesUserPaymentsByMonth]
-    val unusualExpensesAnalyzer = new UnusualExpensesOneMonthAnalyzer(fetchesUserPaymentsByMonth)(fakeClock)
+    val unusualExpensesAnalyzer: UnusualExpensesAnalyzer = new UnusualExpensesOneMonthAnalyzer(fetchesUserPaymentsByMonth)(fakeClock)
   }
 
   "The one month unusual expenses analyzer" must {

@@ -12,12 +12,29 @@ class TriggerUnusualSpendingEmail(val unusualExpensesAnalyzer: UnusualExpensesAn
 
 }
 
+import java.time.LocalDate
+
 import spending.Category.Category
 
 case class UnusualExpense(price: BigDecimal, category: Category)
 
 trait UnusualExpensesAnalyzer {
   def analyzeExpenses(userId: Long): Seq[UnusualExpense]
+
+  protected def monthlyExpensesByCategory(userId: Long, date: LocalDate, fetcher: FetchesUserPaymentsByMonth): Map[Category, BigDecimal] = {
+    fetcher
+      .fetch(userId, date.getYear, date.getMonthValue)
+      .groupBy { _.category }
+      .map { case (category, payments) ⇒ (category, payments.map { _.price }.sum) }
+  }
+
+  protected def findUnusualExpenses(current: Map[Category, BigDecimal], previous: Map[Category, BigDecimal]): Seq[UnusualExpense] = {
+    def isAboveThreshold(current: BigDecimal, usual: BigDecimal): Boolean = current >= (usual * 1.50)
+    current
+      .filter { case (category, amount) ⇒ isAboveThreshold(amount, previous.getOrElse(category, 0.00)) }
+      .map { case (category, amount) ⇒ UnusualExpense(amount, category) }
+      .toSeq
+  }
 }
 
 trait UnusualExpensesNotifier {
