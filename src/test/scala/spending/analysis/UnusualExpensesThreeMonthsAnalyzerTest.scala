@@ -38,7 +38,7 @@ class UnusualExpensesThreeMonthsAnalyzerTest extends AnyWordSpec with Matchers w
 
         private val result = unusualExpensesAnalyzer.analyzeExpenses(1L)
 
-        result must contain(UnusualExpense(200.00, Category.entertainment))
+        result must contain(UnusualExpense(Category.entertainment, 200.00))
       }
 
       "sum of payments this month goes above the threshold (150%) compared to last 3 months average" in new SetupWithFixedCurrentDate("2020-01-10") {
@@ -62,7 +62,7 @@ class UnusualExpensesThreeMonthsAnalyzerTest extends AnyWordSpec with Matchers w
 
         private val result = unusualExpensesAnalyzer.analyzeExpenses(1L)
 
-        result must contain(UnusualExpense(150.00, Category.travel))
+        result must contain(UnusualExpense(Category.travel, 150.00))
       }
     }
 
@@ -106,7 +106,7 @@ class UnusualExpensesThreeMonthsAnalyzerTest extends AnyWordSpec with Matchers w
 
         private val result = unusualExpensesAnalyzer.analyzeExpenses(1L)
 
-        result must not contain UnusualExpense(140.00, Category.travel)
+        result must not contain UnusualExpense(Category.travel, 140.00)
       }
     }
 

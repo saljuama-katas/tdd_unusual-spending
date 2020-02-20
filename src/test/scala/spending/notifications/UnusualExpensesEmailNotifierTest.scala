@@ -18,8 +18,8 @@ class UnusualExpensesEmailNotifierTest extends AnyWordSpec with Matchers with Mo
       emailsUserWrapper.email _ expects(1L, *, *)
 
       unusualExpensesEmailNotifier.notifyUser(1L, Seq(
-        UnusualExpense(100.00, Category.entertainment),
-        UnusualExpense(50.00, Category.travel)
+        UnusualExpense(Category.entertainment, 100.00),
+        UnusualExpense(Category.travel, 50.00)
       ))
     }
 
@@ -27,8 +27,8 @@ class UnusualExpensesEmailNotifierTest extends AnyWordSpec with Matchers with Mo
       emailsUserWrapper.email _ expects where { (_, subject, _) ⇒ subject.contains("150.00") }
 
       unusualExpensesEmailNotifier.notifyUser(1L, Seq(
-        UnusualExpense(100.00, Category.entertainment),
-        UnusualExpense(50.00, Category.travel)
+        UnusualExpense(Category.entertainment, 100.00),
+        UnusualExpense(Category.travel, 50.00)
       ))
     }
 
@@ -39,8 +39,8 @@ class UnusualExpensesEmailNotifierTest extends AnyWordSpec with Matchers with Mo
       }
 
       unusualExpensesEmailNotifier.notifyUser(1L, Seq(
-        UnusualExpense(100.00, Category.entertainment),
-        UnusualExpense(50.00, Category.travel)
+        UnusualExpense(Category.entertainment, 100.00),
+        UnusualExpense(Category.travel, 50.00)
       ))
     }
 

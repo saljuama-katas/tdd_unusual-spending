@@ -24,7 +24,7 @@ class TriggerUnusualSpendingEmailTest extends AnyWordSpec with Matchers with Moc
     }
 
     "send an user notification when the user has unusual expenses" in new Setup {
-      private val unusualExpenses = Seq(UnusualExpense(10.00, Category.entertainment))
+      private val unusualExpenses = Seq(UnusualExpense(Category.entertainment, 10.00))
 
       (unusualExpensesAnalyzer.analyzeExpenses _).expects(userId).returning(unusualExpenses)
       (unusualExpensesNotifier.notifyUser _).expects(userId, unusualExpenses).once

@@ -16,7 +16,7 @@ import java.time.LocalDate
 
 import spending.Category.Category
 
-case class UnusualExpense(price: BigDecimal, category: Category)
+case class UnusualExpense(category: Category, price: BigDecimal)
 
 trait UnusualExpensesAnalyzer {
   def analyzeExpenses(userId: Long): Seq[UnusualExpense]
@@ -32,7 +32,7 @@ trait UnusualExpensesAnalyzer {
     def isAboveThreshold(current: BigDecimal, usual: BigDecimal): Boolean = current >= (usual * 1.50)
     current
       .filter { case (category, amount) ⇒ isAboveThreshold(amount, previous.getOrElse(category, 0.00)) }
-      .map { case (category, amount) ⇒ UnusualExpense(amount, category) }
+      .map { case (category, amount) ⇒ UnusualExpense(category, amount) }
       .toSeq
   }
 }
