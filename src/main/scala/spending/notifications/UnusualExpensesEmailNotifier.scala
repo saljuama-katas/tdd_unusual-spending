@@ -9,8 +9,9 @@ class UnusualExpensesEmailNotifier(val emailsUserWrapper: EmailsUserWrapper) ext
   }
 
   private def composeSubject(unusualExpenses: Seq[UnusualExpense]) = {
-    val totalUnusualExpenses = unusualExpenses.map { _.price }.sum
-    s"Unusual spending detected of ${formatCurrency(totalUnusualExpenses)} detected!"
+    val totalUnusualExpenses = unusualExpenses.map { _.unusual }.sum
+    val totalUsualExpenses = unusualExpenses.map { _.usual }.sum
+    s"Unusual spending detected of ${formatCurrency(totalUnusualExpenses)} detected!  (usual was ${formatCurrency(totalUsualExpenses)})"
   }
 
   private def composeBody(unusualExpenses: Seq[UnusualExpense]): String = {
@@ -28,7 +29,7 @@ class UnusualExpensesEmailNotifier(val emailsUserWrapper: EmailsUserWrapper) ext
         |The Credit Card Company
         |""".stripMargin
     val unusualExpensesList = unusualExpenses
-      .map { expense ⇒ s"* You spent ${formatCurrency(expense.price)} on ${expense.category}" }
+      .map { expense ⇒ s"* You spent ${formatCurrency(expense.unusual)} on ${expense.category} (usual was ${formatCurrency(expense.usual)})" }
       .mkString("\n")
 
     emailHeader + unusualExpensesList + emailFooter
