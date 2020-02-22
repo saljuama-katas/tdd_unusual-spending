@@ -9,7 +9,7 @@ import spending._
 
 class UnusualExpensesThreeMonthsAnalyzerTest extends AnyWordSpec with Matchers with MockFactory {
 
-  class SetupWithFixedCurrentDate(val date: String) {
+  class SetupWithFixedCurrentDate(val date: String = "2020-01-10") {
     private def fakeClock: Clock = Clock.fixed(Instant.parse(date + "T00:00:00.00Z"), ZoneId.systemDefault())
     val fetchesUserPaymentsByMonth: FetchesUserPaymentsByMonth = mock[FetchesUserPaymentsByMonth]
     val unusualExpensesAnalyzer: UnusualExpensesAnalyzer = new UnusualExpensesThreeMonthsAnalyzer(fetchesUserPaymentsByMonth)(fakeClock)
@@ -17,7 +17,7 @@ class UnusualExpensesThreeMonthsAnalyzerTest extends AnyWordSpec with Matchers w
 
   "The three months unusual expenses analyzer" must {
 
-    "fetch the expenses for the current and last 3 months" in new SetupWithFixedCurrentDate("2020-01-10") {
+    "fetch the expenses for the current and last 3 months" in new SetupWithFixedCurrentDate {
       (fetchesUserPaymentsByMonth.fetch _).expects(1L, 2020, 1).returning(Seq())
       (fetchesUserPaymentsByMonth.fetch _).expects(1L, 2019, 12).returning(Seq())
       (fetchesUserPaymentsByMonth.fetch _).expects(1L, 2019, 11).returning(Seq())
@@ -28,7 +28,7 @@ class UnusualExpensesThreeMonthsAnalyzerTest extends AnyWordSpec with Matchers w
 
     "return unusual expenses for a category" when {
 
-      "having expenses this month but not in last months" in new SetupWithFixedCurrentDate("2020-01-10") {
+      "having expenses this month but not in last months" in new SetupWithFixedCurrentDate {
         (fetchesUserPaymentsByMonth.fetch _).expects(1L, 2019, 10).returning(Seq())
         (fetchesUserPaymentsByMonth.fetch _).expects(1L, 2019, 11).returning(Seq())
         (fetchesUserPaymentsByMonth.fetch _).expects(1L, 2019, 12).returning(Seq())
@@ -41,7 +41,7 @@ class UnusualExpensesThreeMonthsAnalyzerTest extends AnyWordSpec with Matchers w
         result must contain(UnusualExpense(Category.entertainment, 200.00, 0.00))
       }
 
-      "sum of payments this month goes above the threshold (150%) compared to last 3 months average" in new SetupWithFixedCurrentDate("2020-01-10") {
+      "sum of payments this month goes above the threshold (150%) compared to last 3 months average" in new SetupWithFixedCurrentDate {
         (fetchesUserPaymentsByMonth.fetch _).expects(1L, 2019, 10).returning(Seq(
           Payment(25.00, "Rome", Category.travel),
           Payment(25.00, "Moscow", Category.travel)
@@ -68,7 +68,7 @@ class UnusualExpensesThreeMonthsAnalyzerTest extends AnyWordSpec with Matchers w
 
     "NOT return unusual expenses for a category" when {
 
-      "last month there were payments but not this month" in new SetupWithFixedCurrentDate("2020-01-10") {
+      "last month there were payments but not this month" in new SetupWithFixedCurrentDate {
         (fetchesUserPaymentsByMonth.fetch _).expects(1L, 2019, 10).returning(Seq(
           Payment(100.00, "I'm rich you know", Category.golf)
         ))
@@ -85,7 +85,7 @@ class UnusualExpensesThreeMonthsAnalyzerTest extends AnyWordSpec with Matchers w
         result.map { _.category } must  not contain Category.golf
       }
 
-      "sum of payments this month does not reach the threshold (150%) compared to last month" in new SetupWithFixedCurrentDate("2020-01-10") {
+      "sum of payments this month does not reach the threshold (150%) compared to last month" in new SetupWithFixedCurrentDate {
         (fetchesUserPaymentsByMonth.fetch _).expects(1L, 2019, 10).returning(Seq(
           Payment(25.00, "Rome", Category.travel),
           Payment(25.00, "Moscow", Category.travel)
@@ -110,7 +110,7 @@ class UnusualExpensesThreeMonthsAnalyzerTest extends AnyWordSpec with Matchers w
       }
     }
 
-    "analyze multiple categories" in new SetupWithFixedCurrentDate("2020-01-10") {
+    "analyze multiple categories" in new SetupWithFixedCurrentDate {
       (fetchesUserPaymentsByMonth.fetch _).expects(1L, 2019, 10).returning(Seq(
         Payment(25.00, "Rome", Category.travel),
         Payment(25.00, "Moscow", Category.travel),
