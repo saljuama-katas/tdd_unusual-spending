@@ -1,8 +1,9 @@
-# Unusual Spending Kata 
+# TDD Kata: Unusual Spending 
 
-Tags: `tdd`, `test-doubles`
+Language: Scala
 
-## Goal
+## Description 
+
 The goal of this kata is to practice Discovery Testing. That is, after understanding all the requirements, to follow this workflow:
 
 1. Start with a Collaboration Test of the feature's entry point method (provided as `spending.TriggersUnusualSpendingEmail#trigger`), using it to identify 2-4 new classes that could be used to break the problem down
@@ -12,8 +13,7 @@ The goal of this kata is to practice Discovery Testing. That is, after understan
 5. If it merely needs to delegate to a third party function, write a Wrapper for it and don't bother unit testing the wrapper
 6. Repeat Step 2 until you've implemented a complete solution
 
-
-## Requirements
+### Requirements
 You work at a credit card company and as a value-add they want to start providing alerts to users when their spending in any particular category is higher than usual.
 
 * A `Payment` is a simple value object with a `price`, `description`, and `category`
@@ -35,7 +35,7 @@ Love,
 The Credit Card Company
 ```
 
-## Caveats
+### Caveats
 Like most applications that developers are paid to write, this kata tasks the programmer to implement just one layer of an overall solution, meaning there are a number of important facets we can't control:
 
 * We don't control who invokes our `TriggersUnusualSpendingEmail#trigger(userId)` entry point, or when; nor can we change its method signature, as it represents a public interface that something else (maybe a job scheduler system) is depending on
@@ -48,7 +48,7 @@ For more on mocking and external constraints, be sure to read Don't mock what yo
 
 Making forward-progress on our work while dealing with constraints like this are part-and-parcel of being a productive professional programmer. Discovery Testing is designed to enable that productivity by helping us write well-designed and well-tested code that's narrowly focused on the things within our control.
 
-## Extra Credit
+### Extra Credit
 Once you've completed the kata, if you'd like to test your approach for how easy it is to change, try these requested requirement changes:
 
 * Load three months of payment history and compare the current month to their average totals by category (you're guaranteed to have the most recent month, but either of the two prior months might come back as empty sets, as if the user lacks the payment history)
